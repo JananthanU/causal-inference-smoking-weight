@@ -1,0 +1,8 @@
+pandas
+numpy
+matplotlib
+scikit-learn>=1.9,<1.10
+statsmodels
+networkx
+econml>=0.17,<0.18
+causallib

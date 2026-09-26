@@ -1,0 +1,6 @@
+check,result,passed
+7.1 Placebo treatment,"placebo mean +0.06 kg, real effect p = 0.048",True
+7.2 Random common cause,largest shift 0.10 kg,True
+7.3 Semi-synthetic (known effect),"bias +0.09 kg, coverage 100%",True
+7.4 Unmeasured confounding,"RV = 18%, U needs about 9 times the strength of age",True
+7.5 Missing outcomes,3.50 kg with vs. 3.44 kg without censoring weights,True
