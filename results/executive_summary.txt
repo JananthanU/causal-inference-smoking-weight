@@ -1,0 +1,17 @@
+
+MAIN IDEA (treatment + treatment effect)
+  Quitting smoking causes about 3.4 kg additional weight gain over 11 years (95% CI 2.5 to 4.3).
+  We find no reliable evidence that it differs between smokers (calibration beta = 0.54, one-sided p = 0.14; RATE not significant; best linear projection not significant).
+
+KEY LINE 1: the raw number is misleading
+  Naive difference 2.5 kg. Quitters were older and smoked less (largest ASMD 0.20);
+  after weighting every ASMD is below 0.03.
+
+KEY LINE 2: the adjusted number is robust
+  4 adjusted estimators between 3.3 and 3.5 kg; IPW reproduces Hernán & Robins (3.4 kg).
+  5 of 5 robustness checks passed. An unmeasured confounder would need 18% partial R2 with both
+  quitting and weight change (about 9 times the strength of age) to erase the effect.
+
+KEY LINE 3: what it means (adapt to your audience)
+  Offer weight support to all quitters; the data give no basis for targeting a subgroup.
+  About 0.3 kg per year, small compared with the health benefits of quitting.
