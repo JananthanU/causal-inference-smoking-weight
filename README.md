@@ -17,7 +17,7 @@ How much weight do smokers gain because they quit? This project answers that wit
 | Robustness checks passed | **5 of 5** |
 | Effect heterogeneity (CATE) | Not detectable (calibration test β = 0.54, one-sided p = 0.14) |
 
-All estimators on the same 1,566 smokers, effect on weight change from 1971 to 1982 in kg:
+Estimator ladder on the same 1,566 smokers:
 
 | Estimator | Estimate | SE | 95% CI |
 |---|---|---|---|
@@ -27,24 +27,11 @@ All estimators on the same 1,566 smokers, effect on weight change from 1971 to 1
 | AIPW: parametric nuisances, cross-fit | 3.26 | 0.51 | 2.27 to 4.26 |
 | **AIPW: causal forest** | **3.38** | **0.47** | **2.46 to 4.30** |
 
-The naive comparison understates the effect by about a quarter. Quitters were older and heavier at baseline, and both go along with smaller weight gain. Spread over 11 years, the effect is about 0.3 kg per year, which is small next to the health benefits of quitting.
+*Effect on weight change from 1971 to 1982 in kg. Spread over 11 years, that is about 0.3 kg per year.*
 
-## Why NHEFS
+## Approach
 
-I looked at four datasets. The one I used had to meet five criteria: a real treatment decision, treatment before outcome in time, a published reference value, documented provenance, and not already overused on Kaggle.
-
-| Dataset | Verdict | Reason |
-|---|---|---|
-| Stroke Prediction (Kaggle) | Rejected | Authenticity and provenance cannot be verified ([Gibson et al. 2026, BMC Medicine](https://doi.org/10.1186/s12916-026-04981-y)) |
-| CERN Electron Collision | Rejected | No treatment, so there is no causal effect to estimate |
-| Lalonde (NSW job training) | Rejected | Identical to an exercise already covered in the course |
-| **NHEFS** | **Selected** | Meets all five criteria |
-
-NHEFS (NHANES I Epidemiologic Follow-up Study, run by NCHS and CDC) meets all five. Participants decided themselves whether to quit. The nine confounders were measured in 1971, before anyone quit, and weight change in 1982. Hernán and Robins report a reference estimate in *Causal Inference: What If*, so the pipeline can be checked against a known answer. The data come from a documented federal survey and rarely show up in Kaggle projects.
-
-## Methodology
-
-The notebook follows the eight steps of the causal ML pipeline from the lecture. The [background document](docs/NHEFS_background_document.docx) explains each step in more detail and contains all tables and appendix figures.
+The data come from NHEFS (NHANES I Epidemiologic Follow-up Study, NCHS and CDC). I chose it because Hernán and Robins publish a reference estimate for exactly this question, so the pipeline can be checked against a known answer. The notebook follows an eight-step causal ML pipeline. The [background document](docs/NHEFS_background_document.docx) explains each step in more detail and contains all tables and appendix figures.
 
 | Step | What was done |
 |---|---|
@@ -56,6 +43,16 @@ The notebook follows the eight steps of the causal ML pipeline from the lecture.
 | **6. Evaluate** | Calibration test, predicted vs. confirmed effects by quartile, RATE with split-and-score. None of them confirms heterogeneity |
 | **7. Robustness** | Placebo treatment, random common cause, semi-synthetic outcome with known effect, sensitivity to unmeasured confounding (Cinelli and Hazlett), IP weighting for censoring |
 | **8. Interpretation** | Best linear projection, partial dependence and illustrative profiles. Reported as exploratory only, since Step 6 found no heterogeneity |
+
+## Key Findings
+
+**The naive comparison understates the effect by about a quarter.** Quitters gained 2.54 kg more than continuing smokers, but they were older and heavier at baseline, and both go along with smaller weight gain. After adjusting for the nine baseline confounders, the effect is 3.38 kg.
+
+**Four adjusted estimators agree, and IPW matches the published value.** Outcome regression, IPW and two AIPW variants land between 3.26 and 3.52 kg. IPW gives 3.44 kg, the same as Hernán and Robins.
+
+**There is no detectable difference between groups of smokers.** The calibration test, the quartile check and the RATE all come out null. The semi-synthetic test shows that the pipeline would have found a strong difference (2 kg more per 10 cigarettes a day) in 5 of 5 runs, so any real heterogeneity is smaller than that.
+
+**The result holds up against unmeasured confounding and missing outcomes.** An unmeasured confounder would need about 9 times the strength of age to erase the effect (robustness value 18%). Weighting for the 63 people without a 1982 weight moves the estimate only from 3.44 to 3.50 kg.
 
 ## Visualisations
 
@@ -73,7 +70,7 @@ Robustness scorecard. An unmeasured confounder would need about 9 times the stre
 
 All 17 figures are in [`figures/`](figures), the key numbers as JSON and CSV in [`results/`](results).
 
-## Reproduce
+## Reproducibility
 
 ```bash
 git clone https://github.com/JananthanU/causal-inference-smoking-weight
